@@ -1,2 +1,4 @@
 #lokal zugewiesene Version des Pakets 'request'
 requests==2.32.3
+
+streamlit==1.43.2
