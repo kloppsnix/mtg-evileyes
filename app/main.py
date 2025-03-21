@@ -1,7 +1,14 @@
 import streamlit as st
-import time
+# import time
 import requests
 import pandas as pd
+
+from state import toggle_session_state
+from filter import filter_sort_columns_data
+from cache import load_filter_sets
+
+st.write(st.session_state)      # display state
+# st.session_state["search_clicked"] = False
 
 base_url = "https://api.scryfall.com"
 set_url = base_url + "/" + "sets"
@@ -9,35 +16,29 @@ set_url = base_url + "/" + "sets"
 st.title("Set-Labler")
 
 sel_box = st.multiselect("Choose Sets",
-                         ["core", "expansion"],
-                         ["core", "expansion"]
+                         ["core", "expansion"],     # Selection-Items
+                         ["core", "expansion"],     # default
+                         on_change = toggle_session_state
                         )
 
 btn_search = st.button("Search")
-if btn_search:
-    with st.spinner("Wait for it...", show_time=True):
-        all_sets_data = requests.get(url = set_url)
-        asd = all_sets_data.json()
+if btn_search:      # = if btn_search = true | button activation
+    st.session_state["search_clicked"] = True
 
-        filtered_data = []
-        for item in asd["data"]:
-            if item["set_type"] in sel_box:
-                filtered_data.append(item)      
+st.write(st.session_state)      # display state
 
-    filtered_data = pd.DataFrame(filtered_data)
-    filtered_data = filtered_data[["name", "released_at", "icon_svg_uri", "set_type"]]
-    filtered_data = filtered_data.sort_values("set_type")
+if st.session_state.get("search_clicked", False):       # search_clicked = False
+    asd = load_filter_sets(set_url = set_url, sel_box = sel_box)
 
-    filtered_data["Select Set(s)"] = False
-    filtered_data = filtered_data[["Select Set(s)", "name", "released_at", "icon_svg_uri"]]
+    chkb_sel_all = st.checkbox("Select all")     
 
-    filtered_data = filtered_data.head(5)
+    filtered_data = filter_sort_columns_data(filtered_data = asd, sel_fields = chkb_sel_all)
 
     usr_selection = st.data_editor(
         filtered_data, 
-        column_config={
+        column_config={     # preview set-icons
             "icon_svg_uri": st.column_config.ImageColumn(
-                "Preview Image", help="Streamlit app preview screenshots", width = "large"
+                "Preview Image", help="Streamlit app preview screenshots", width = "small"
             )
         },
         hide_index=True
