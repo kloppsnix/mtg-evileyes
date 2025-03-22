@@ -1,6 +1,6 @@
 import streamlit as st
 # import time
-import requests
+# import requests
 import pandas as pd
 
 from state import toggle_session_state
@@ -22,7 +22,7 @@ sel_box = st.multiselect("Choose Sets",
                         )
 
 btn_search = st.button("Search")
-if btn_search:      # = if btn_search = true | button activation
+if btn_search:      # = if btn_search = true | button clicked
     st.session_state["search_clicked"] = True
 
 st.write(st.session_state)      # display state
