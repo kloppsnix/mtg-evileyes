@@ -6,6 +6,7 @@ import pandas as pd
 from state import toggle_session_state
 from filter import filter_sort_columns_data
 from cache import load_filter_sets
+from svg_template import create_labels
 
 st.write(st.session_state)      # display state
 # st.session_state["search_clicked"] = False
@@ -43,3 +44,9 @@ if st.session_state.get("search_clicked", False):       # search_clicked = False
         },
         hide_index=True
     )
+
+    btn_preview_labels = st.button("Create labels preview")
+    if btn_preview_labels:
+            content = create_labels(label_data = usr_selection)
+            st.write(content)
+            preview_labels = st.image(content)
