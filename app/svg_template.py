@@ -3,10 +3,12 @@ from jinja2 import Environment, FileSystemLoader
 def create_labels(label_data):
 
     environment = Environment(loader=FileSystemLoader("templates/"))
-    template = environment.get_template("set_print_template.svg")
+    template = environment.get_template("set_print_template_loop.svg")
 
     label_data = label_data[label_data["Select Set(s)"] == True]
-    label_data = label_data.iloc[0]
+    label_data = label_data.iloc[0:60]
+    label_data = set_xy_positions(label_data)
+    label_data = label_data.to_dict("records")      # to key-value conversion
 
     # name = label_data["name"]
     # add_name = label_data["add_name"]
@@ -15,10 +17,11 @@ def create_labels(label_data):
 
     filename = "rendered.svg"
     content = template.render(
-        name = label_data["name"],
+        # name = label_data["name"],
         # add_name = label_data["add_name"],
-        released_at = label_data["released_at"],
-        icon_svg_uri = label_data["icon_svg_uri"]
+        # released_at = label_data["released_at"],
+        # icon_svg_uri = label_data["icon_svg_uri"]
+        selected_sets = label_data
         )
     #with open(filename, mode="w", encoding="utf-8") as message:
     #    message.write(content)

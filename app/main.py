@@ -47,6 +47,8 @@ if st.session_state.get("search_clicked", False):       # search_clicked = False
 
     btn_preview_labels = st.button("Create labels preview")
     if btn_preview_labels:
-            content = create_labels(label_data = usr_selection)
-            st.write(content)
-            preview_labels = st.image(content)
+        content = create_labels(label_data = usr_selection)
+        # st.write(content)
+        preview_labels = st.image(content)
+
+        btn_label_download = st.download_button("Download labels", data = content)
