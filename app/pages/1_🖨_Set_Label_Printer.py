@@ -22,6 +22,9 @@ sel_box = st.multiselect("Choose Sets",
                          on_change = toggle_session_state
                         )
 
+if len(sel_box) == 0:
+    raise ValueError("No Set chosen! Please choose at least one Set")
+
 btn_search = st.button("Search")
 if btn_search:      # = if btn_search = true | button clicked
     st.session_state["search_clicked"] = True
